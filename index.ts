@@ -1,6 +1,7 @@
 import  dotenv  from 'dotenv';
 import express, { Express, Request, Response } from 'express';
 import * as database from "./configs/database";
+import clientRoutes from './routes/client/index.route';
 
 dotenv.config();
 database.connect();
@@ -11,9 +12,8 @@ const port: number | string = process.env.PORT || 3000;
 app.set("views", "./views");
 app.set("view engine", "pug");
 
-app.get("/topic", (req: Request, res: Response) => {
-    res.render("client/pages/topics/index");
-});
+//Client Routes
+clientRoutes(app);
 
 app.listen(port, () => {
     console.log("App listening on port "+ port);
