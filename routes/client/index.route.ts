@@ -3,7 +3,7 @@ import { topicRoutes } from "./topic.route";
 
 const clientRoutes = (app: Express): void => {
     
-    app.use("/topic", topicRoutes);
+    app.use("/topics", topicRoutes);
 
 }
 
