@@ -114,6 +114,52 @@
 /* end song-item */
 
 /* singer-detail */
+.inner-title{
+    font-size: 30px;
+    color: #f57f20;
+    font-weight: bolder;
+}
+
+.inner-actions{
+    display: flex;
+    justify-content: space-around;
+}
+
+.singer-detail .inner-actions .inner-like{
+    cursor: pointer;
+}
+
+.singer-detail .inner-actions .inner-like i {
+    color: #0059ff;
+    font-weight: 100;
+}
+
+.singer-detail .inner-actions .inner-like.active{
+    color: #0059ff;
+}
+
+.singer-detail .inner-actions .inner-like i.active{
+    font-weight: 900;
+}
+
+.singer-detail .inner-actions .inner-heart {
+    cursor: pointer;
+}
+
+.singer-detail .inner-actions .inner-heart i {
+    color: #b90000;
+}
+
+.singer-detail .inner-play{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.inner-detail .inner-play .inner-audio{
+    flex: 1;
+}
+
 .singer-detail .inner-avatar {
     width: 100px;
     height: 100px;
@@ -125,6 +171,7 @@
     animation-duration: 12s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+    animation-play-state: paused;
 }
 
 
