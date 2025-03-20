@@ -28,6 +28,9 @@ interface Song{
     slug: string,
     singerId: string,
     like: number,
+    topicId: string,
+    description: string,
+    lyrics: string,
     infoSinger?: Singer | null
 }
 
@@ -66,4 +69,32 @@ export const list = async (req: Request, res: Response) => {
     } catch (error) {
         res.redirect("/");
     }
+}
+
+//[GET] /songs/detai/:slugSong
+export const detail = async (req: Request, res: Response) => {
+    const slugSong = req.params.slugSong;
+
+    const song:Song|null = await Song.findOne({
+        status: "active",
+        slug: slugSong,
+        deleted: false
+    });
+
+    const singer:Singer|null = await Singer.findOne({
+        _id: song?.singerId,
+        deleted: false,
+    }).select("fullName");
+
+    const topic:Topic|null = await Topic.findOne({
+        _id: song?.topicId,
+        deleted: false,
+    });
+
+    res.render("client/pages/songs/detail", {
+        pageTitle: "Chi tiết bài hát",
+        song: song,
+        singer: singer,
+        topic: topic
+    })
 }
