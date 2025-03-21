@@ -3,6 +3,7 @@ import Topic from "../../models/topic.model";
 import { ObjectId } from "mongoose";
 import Song from "../../models/song.model";
 import Singer from "../../models/singer.model";
+import FavouriteSong from "../../models/favourite-song.model";
 
 interface Topic {
     id: ObjectId,
@@ -23,6 +24,7 @@ interface Singer{
 }
 
 interface Song{
+    id: string,
     avatar: string,
     title: string,
     slug: string,
@@ -31,7 +33,8 @@ interface Song{
     topicId: string,
     description: string,
     lyrics: string,
-    infoSinger?: Singer | null
+    infoSinger?: Singer | null,
+    isFavouriteSong?: boolean
 }
 
 
@@ -91,6 +94,13 @@ export const detail = async (req: Request, res: Response) => {
         deleted: false,
     });
 
+    const favouriteSong = await FavouriteSong.findOne({
+        songId: song?.id
+    });
+
+    if(song)
+        song.isFavouriteSong = favouriteSong ? true: false;
+
     res.render("client/pages/songs/detail", {
         pageTitle: "Chi tiết bài hát",
         song: song,
@@ -129,4 +139,38 @@ export const like = async (req: Request, res: Response) => {
             message: "Không thành công"
         });
     }
+}
+
+//[PATCH] /favourite/:typeFavourite/:idSong
+export const favourite = async (req: Request, res: Response) => {
+    const idSong:string = req.params.idSong;
+    const typeFavourite:string = req.params.typeFavourite;
+
+    switch(typeFavourite){
+        case "favourite":
+            const exisiFavouriteSong = await FavouriteSong.findOne({
+                songId: idSong
+            });
+            if(!exisiFavouriteSong){
+                const record = new FavouriteSong({
+                    // userId: "",
+                    songId: idSong
+                });
+                await record.save();
+            }
+            break;
+        case "unfavourite":
+            await FavouriteSong.deleteOne({
+                songId: idSong
+            });
+            break;
+        default:
+
+            break;
+    }
+
+    res.json({
+        code: 200,
+        message: "Thành công"
+    })
 }
