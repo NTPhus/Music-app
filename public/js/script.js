@@ -59,28 +59,30 @@ if (buttonLike) {
 //End Button like
 
 //Button favourite
-const buttonFavourite = document.querySelector("[button-favourite]");
-if (buttonFavourite) {
-  buttonFavourite.addEventListener("click", () => {
-    const idSong = buttonFavourite.getAttribute("button-favourite");
+const listButtonFavourite = document.querySelectorAll("[button-favourite]");
+if (listButtonFavourite.length > 0) {
+  listButtonFavourite.forEach((buttonFavourite) => {
+    buttonFavourite.addEventListener("click", () => {
+      const idSong = buttonFavourite.getAttribute("button-favourite");
 
-    const isActive = buttonFavourite.classList.contains("active");
+      const isActive = buttonFavourite.classList.contains("active");
 
-    const typeFavourite = isActive ? "unfavourite" : "favourite";
+      const typeFavourite = isActive ? "unfavourite" : "favourite";
 
-    const link = `/songs/favourite/${typeFavourite}/${idSong}`;
+      const link = `/songs/favourite/${typeFavourite}/${idSong}`;
 
-    const option = {
-      method: "PATCH",
-    };
+      const option = {
+        method: "PATCH",
+      };
 
-    fetch(link, option)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.code == 200) {
-          buttonFavourite.classList.toggle("active");
-        }
-      });
+      fetch(link, option)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.code == 200) {
+            buttonFavourite.classList.toggle("active");
+          }
+        });
+    });
   });
 }
 //End Button like
