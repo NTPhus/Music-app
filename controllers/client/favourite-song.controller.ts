@@ -3,12 +3,6 @@ import FavouriteSong from "../../models/favourite-song.model"
 import Song from "../../models/song.model";
 import Singer from "../../models/singer.model";
 
-interface FavouriteSong{
-    userId: string,
-    songId: string,
-    infoSong?: object
-}
-
 //[GET] /favourite-songs/
 export const index = async (req: Request, res: Response) => {
     const favouriteSongs:any = await FavouriteSong.find({
