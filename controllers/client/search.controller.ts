@@ -1,22 +1,42 @@
 import { Request, Response } from "express";
 import Song from "../../models/song.model";
+import SongInterface from "../../interfaces/song.interface";
+import Singer from "../../models/singer.model";
+import SingerInterface from "../../interfaces/singer.interface";
+import { convertToSlug } from "../../helpers/convertToSlug";
 
 
 //[GET] /search/result
 export const result = async (req: Request, res: Response) => {
     const keyword: string | any = req.query.keyword;
 
-    let newSongs: any = [];
+    let newSongs: SongInterface[] = [];
 
     if(keyword){
         const keywordRegex = new RegExp(keyword, "i");
-        const songs = await Song.find({
-            title: keywordRegex
-        });
-        console.log(songs)
-    }
 
-    
+        //Tạo ra slug không dấu, dấu - ngăn cách
+        const stringSlug = convertToSlug(keyword);
+
+        const stringSlugRegex = new RegExp(stringSlug, "i");
+
+        const songs:SongInterface[] = await Song.find({
+            $or: [
+                {title: keywordRegex},
+                {slug: stringSlugRegex}
+            ]
+        });
+
+        for (const item of songs) {
+            const infoSinger:SingerInterface|null = await Singer.findOne({
+                _id: item.singerId
+            });
+
+            item.infoSinger = infoSinger;
+        }
+
+        newSongs = songs;
+    }
 
     res.render("client/pages/search/result", {
         pageTitle: "Kết quả: " + keyword,
