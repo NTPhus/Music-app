@@ -25,6 +25,23 @@ if (aplayer) {
   ap.on("pause", function () {
     avatar.style.animationPlayState = "paused";
   });
+
+  ap.on("ended", function () {
+    const link = `/songs/listen/${dataSong._id}`;
+
+    const option = {
+      method: "PATCH",
+    };
+
+    fetch(link, option)
+      .then((res) => res.json())
+      .then((data) => {
+        const elementListenSpan = document.querySelector(
+          ".singer-detail .inner-listen span"
+        );
+        elementListenSpan.innerHTML = ` ${data.listen} lượt nghe`;
+      });
+  });
 }
 // End APlayer
 
@@ -87,9 +104,9 @@ if (listButtonFavourite.length > 0) {
 }
 //End Button like
 
-//Search Suggest 
+//Search Suggest
 const boxSearch = document.querySelector(".box-search");
-if(boxSearch){
+if (boxSearch) {
   const input = boxSearch.querySelector("input[name='keyword']");
   const boxSuggest = boxSearch.querySelector(".inner-suggest");
 
@@ -100,13 +117,13 @@ if(boxSearch){
     const link = `search/suggest?keyword=${keyword}`;
 
     fetch(link)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         const songs = data.songs;
-        if(songs.length > 0) {
+        if (songs.length > 0) {
           boxSuggest.classList.add("show");
 
-          const html = songs.map(song => {
+          const html = songs.map((song) => {
             return `
               <a href="songs/detail/${song.slug}" class="inner-item">
                 <div class="inner-image"> 
@@ -118,15 +135,15 @@ if(boxSearch){
                     <i class="fa-solid fa-microphone-lines"></i> ${song.infoSinger.fullName}  </div>
                  </div>
               </a>
-            `
+            `;
           });
 
           const boxList = boxSuggest.querySelector(".inner-list");
           boxList.innerHTML = html.join("");
-        }else{
+        } else {
           boxSuggest.classList.remove("show");
         }
-      })
+      });
   });
 }
-//End Search Suggest 
+//End Search Suggest

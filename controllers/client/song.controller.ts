@@ -144,3 +144,39 @@ export const favourite = async (req: Request, res: Response) => {
         message: "Thành công"
     })
 }
+
+//[PATCH] /listem/:idSong
+export const listen = async (req:Request, res:Response) => {
+    const idSong:string = req.params.idSong;
+
+    const song:SongInterface|null = await Song.findOne({
+        _id: idSong
+    });
+
+    if(song){
+        const listen: number = song?.listen + 1;
+
+        await Song.updateOne({
+            _id: idSong
+        }, {
+            listen: listen
+        })
+
+        const songNew:SongInterface|null = await Song.findOne({
+            _id: idSong
+        })
+
+        res.json({
+            code: 200,
+            message: "Thành công",
+            listen: songNew?.listen
+        })
+
+        
+    }else{
+        res.json({
+            code: 400,
+            message: "Không thành công"
+        })
+    }
+}

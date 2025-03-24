@@ -7,6 +7,7 @@ interface SongInterface{
     slug: string,
     singerId: string,
     like: number,
+    listen: number,
     topicId: string,
     description: string,
     lyrics: string,
