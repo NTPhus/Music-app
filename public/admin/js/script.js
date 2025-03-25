@@ -23,3 +23,21 @@ if (uploadImage) {
   });
 }
 // End Upload Image
+
+
+// Upload audio
+const uploadAudio = document.querySelector("[upload-audio]");
+if (uploadAudio) {
+  const uploadAudioInput = document.querySelector("[upload-audio-input]");
+  const uploadAudioPlay = document.querySelector("[upload-audio-play]");
+  const source = uploadAudio.querySelector("source");
+
+  uploadAudioInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      source.src = URL.createObjectURL(file);
+      uploadAudioPlay.load();
+    }
+  });
+}
+// End Upload Audio
