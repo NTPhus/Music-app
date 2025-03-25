@@ -36,3 +36,20 @@ export const create = async (req: Request, res: Response) => {
         singers: singers
     })
 }
+
+//[POST] /admin/songs/create
+export const createPost = async (req: Request, res: Response) => {
+    const dataSong = {
+        title: req.body.title,
+        topicId: req.body.topicId,
+        singer: req.body.singer,
+        description: req.body.description,
+        status: req.body.status,
+        avatar: req.body.avatar
+    }
+
+    const song = new Song(dataSong);
+    await song.save();
+
+    res.redirect("/admin/songs");
+}
