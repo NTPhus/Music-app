@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import Song from "../../models/song.model";
 import Topic from "../../models/topic.model";
 import Singer from "../../models/singer.model";
+import { DatabaseSync } from "node:sqlite";
+import { dataSongInterface } from "../../interfaces/dataSong.interface";
 
 
 //[GET] /admin/songs
@@ -50,7 +52,7 @@ export const createPost = async (req: Request, res: Response) => {
         audio = req.body.audio[0];
     }
     
-    const dataSong = {
+    const dataSong: dataSongInterface = {
         title: req.body.title,
         topicId: req.body.topicId,
         singer: req.body.singer,
@@ -65,4 +67,57 @@ export const createPost = async (req: Request, res: Response) => {
     await song.save();
 
     res.redirect("/admin/songs");
+}
+
+//[GET] /admin/songs/edit/:id
+export const edit = async (req: Request, res: Response) => {
+    const id = req.params.id;
+
+    const song = await Song.findOne({
+        _id: id,
+        deleted: false
+    });
+
+    const topics = await Topic.find({
+        deleted: false
+    }).select("title");
+
+    const singers = await Singer.find({
+        deleted: false
+    }).select("fullName");
+
+    res.render("admin/pages/songs/edit", {
+        pageTitle: "Chỉnh sửa bài hát",
+        song: song,
+        topics: topics,
+        singers: singers
+    })
+}
+
+//[PATCH] /admin/songs/edit/:id
+export const editPatch = async (req: Request, res: Response) => {
+    const id = req.params.id;
+
+    const dataSong:dataSongInterface = {
+        title: req.body.title,
+        topicId: req.body.topicId,
+        singer: req.body.singer,
+        description: req.body.description,
+        status: req.body.status,
+        lyrics: req.body.lyrics
+    }
+
+    if(req.body.avatar){
+        dataSong.avatar = req.body.avatar[0];
+    }
+
+    if(req.body.audio){
+        dataSong.audio = req.body.audio[0];
+    }
+
+    await Song.updateOne({
+        _id: id
+    }, dataSong);
+
+    res.redirect("back");
 }

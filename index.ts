@@ -3,7 +3,7 @@ import express, { Express } from 'express';
 import * as database from "./configs/database";
 import clientRoutes from './routes/client/index.route';
 import adminRoutes from './routes/admin/index.route';
-import bodyParser from 'body-parser';
+import methodOverride from "method-override";
 import { systemConfig } from './configs/config';
 import path from 'path';
 
@@ -15,7 +15,7 @@ const port: number | string = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-
+app.use(methodOverride("_method"));
 app.use(express.static("public"));
 
 app.set("views", "./views");
